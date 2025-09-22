@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Edge Impulse Mini Game | 1‑minute Quiz</title>
+  <meta name="description" content="Answer 8 quick questions to get a score and a chance to win a free expert consultation.">
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <div class="brand">
+      <img src="assets/logo.png" class="logo" alt="Advantech logo">
+      <div class="brand-name">Edge Impulse Mini Game</div>
+    </div>
+    <nav class="nav">
+      <a id="startBtn" href="#quiz" class="btn btn-primary">Start</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="hero">
+    <div class="container hero-inner hero-single">
+      <div class="hero-text">
+        <h1><span class="highlight">Edge Impulse</span> Mini Game</h1>
+        <p>Spend 1 minute answering this quiz and win a chance to talk to an expert.</p>
+        <a id="startBtn2" href="#quiz" class="btn btn-primary btn-lg">Start the Game</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="quiz" class="quiz container card hidden">
+    <div class="quiz-header">
+      <h2>Edge AI Readiness Quiz</h2>
+      <div class="progress-wrap"><div id="progressBar" class="progress-bar"></div></div>
+      <p id="stepLabel" class="step-label">Question 1 / 8</p>
+    </div>
+    <div id="questionContainer" class="question"></div>
+    <div class="quiz-actions">
+      <button id="prevBtn" class="btn btn-ghost" disabled>Back</button>
+      <button id="nextBtn" class="btn btn-primary">Next</button>
+    </div>
+  </section>
+
+  <section id="lead" class="container card hidden">
+    <h3>Before we show your result</h3>
+    <p class="muted">Leave your contact info to receive your score and a chance to win a <strong>free consultation with an expert</strong>.</p>
+    <form id="leadForm" class="lead-form">
+      <div class="form-row"><label>Name</label><input name="name" type="text" placeholder="Full name" required></div>
+      <div class="form-row"><label>Phone</label><input name="phone" type="tel" placeholder="+886 9xx xxx xxx" required></div>
+      <div class="form-row"><label>Country</label><input name="country" type="text" placeholder="e.g., Taiwan" required></div>
+      <div class="form-row"><label>Work Email</label><input name="email" type="email" placeholder="name@company.com" required></div>
+      <div class="form-row"><label>Company</label><input name="company" type="text" placeholder="Company / Organization" required></div>
+      <div class="form-row"><label>Job Title</label><input name="title" type="text" placeholder="e.g., Product Manager" required></div>
+      <button class="btn btn-primary" type="submit">Get my result</button>
+    </form>
+  </section>
+
+  <section id="result" class="container card hidden">
+    <h3>Your Result</h3>
+    <p id="resultText" class="result-text"></p>
+    <div class="result-cta" id="cta">
+      <a href="#" class="btn btn-primary">Free consultation with an expert</a>
+      <a id="restartBtn" href="#" class="btn btn-ghost">Restart Quiz</a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p>© 2025 Advantech</p>
+    <a href="#" id="backTop" class="btn btn-ghost">Back to top</a>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
