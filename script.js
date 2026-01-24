@@ -193,11 +193,70 @@ restartBtn.addEventListener("click", (e)=>{
   enterQuiz();
 });
 
-leadForm.addEventListener("submit", (e)=>{
+leadForm.addEventListener("submit", async (e)=>{
   e.preventDefault();
+  
+  // 收集表單資料
+  const formData = new FormData(leadForm);
   const score = calcScore();
   const band = pickBand(score);
   const finalScore = toHighScore(score);
+  
+  // 準備傳送到 Google Sheets 的資料
+  const sheetData = {
+    name: formData.get('name'),
+    phone: formData.get('phone'),
+    country: formData.get('country'),
+    email: formData.get('email'),
+    company: formData.get('company'),
+    title: formData.get('title'),
+    question_1: state.answers[0] !== null ? QUIZ.questions[0].options[state.answers[0]].label : '',
+    question_2: state.answers[1] !== null ? QUIZ.questions[1].options[state.answers[1]].label : '',
+    question_3: state.answers[2] !== null ? QUIZ.questions[2].options[state.answers[2]].label : '',
+    question_3_other: state.otherTexts[2] || '',
+    question_4: state.answers[3] !== null ? QUIZ.questions[3].options[state.answers[3]].label : '',
+    question_4_other: state.otherTexts[3] || '',
+    question_5: state.answers[4] !== null ? QUIZ.questions[4].options[state.answers[4]].label : '',
+    question_6: state.answers[5] !== null ? QUIZ.questions[5].options[state.answers[5]].label : '',
+    question_7: state.answers[6] !== null ? QUIZ.questions[6].options[state.answers[6]].label : '',
+    question_8: state.answers[7] !== null ? QUIZ.questions[7].options[state.answers[7]].label : '',
+    raw_score: score,
+    final_score: finalScore,
+    result_band: band.text
+  };
+  
+  // Google Apps Script Web App URL
+  const GOOGLE_SHEET_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+  
+  // 傳送資料到 Google Sheets
+  try {
+    if (GOOGLE_SHEET_URL && GOOGLE_SHEET_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+      console.log('正在傳送資料到 Google Sheets...');
+      console.log('資料內容:', sheetData);
+      
+      const response = await fetch(GOOGLE_SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors', // 注意：使用 no-cors 模式時無法讀取回應內容
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sheetData)
+      });
+      
+      // 因為使用 no-cors，無法讀取回應狀態
+      // 302 重定向是 Google Apps Script 的正常行為
+      console.log('資料已送出到 Google Sheets');
+      console.log('提示：請到 Google Sheets 確認資料是否成功寫入');
+      console.log('如果看到 302 狀態碼，這是正常的（Google Apps Script 的重定向機制）');
+    } else {
+      console.warn('請先設定 Google Apps Script URL');
+    }
+  } catch (error) {
+    console.error('傳送資料時發生錯誤:', error);
+    // 即使傳送失敗，仍然顯示結果給使用者
+  }
+  
+  // 顯示結果
   resultText.textContent = `Your score: ${finalScore}/100. ${band.text}`;
   showResult();
 });
