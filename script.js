@@ -226,7 +226,7 @@ leadForm.addEventListener("submit", async (e)=>{
   };
   
   // Google Apps Script Web App URL
-  const GOOGLE_SHEET_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+  const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw7zE7Ef3qIBIeI62e0_RWmVJu3VMqF4hIx0yaAFeLhiO7D0PlG-R7jEOvJHvp2Bc7hNQ/exec';
   
   // 傳送資料到 Google Sheets
   try {
