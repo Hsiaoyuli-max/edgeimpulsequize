@@ -105,29 +105,40 @@ const resultText = document.getElementById("resultText");
 const leadForm = document.getElementById("leadForm");
 const quizSection = document.getElementById("quiz");
 const restartBtn = document.getElementById("restartBtn");
+const consultationBtn = document.getElementById("consultationBtn");
 
-function enterQuiz(){
+function enterQuiz() {
   hero.classList.add("hidden");
   resultSection.classList.add("hidden");
   leadSection.classList.add("hidden");
   quizSection.classList.remove("hidden");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
-function showLead(){
+function showLead() {
   quizSection.classList.add("hidden");
   leadSection.classList.remove("hidden");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
-function showResult(){
+function showResult() {
   leadSection.classList.add("hidden");
   resultSection.classList.remove("hidden");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-document.getElementById("startBtn").addEventListener("click", (e)=>{ e.preventDefault(); enterQuiz(); });
-document.getElementById("startBtn2").addEventListener("click", (e)=>{ e.preventDefault(); enterQuiz(); });
+document.getElementById("startBtn").addEventListener("click", (e) => { e.preventDefault(); enterQuiz(); });
+document.getElementById("startBtn2").addEventListener("click", (e) => { e.preventDefault(); enterQuiz(); });
 
-function renderQuestion(){
+consultationBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  Swal.fire({
+    icon: 'success',
+    title: 'Submitted!',
+    text: "We've submitted your 1:1 consultation information to our expert. If you're eligible, you'll receive a notification from us. Thank you.",
+    confirmButtonColor: '#005195'
+  });
+});
+
+function renderQuestion() {
   const q = QUIZ.questions[current];
   stepLabel.textContent = `Question ${current + 1} / ${QUIZ.questions.length}`;
   progressBar.style.width = `${(current / QUIZ.questions.length) * 100}%`;
@@ -143,8 +154,8 @@ function renderQuestion(){
         <input type="radio" name="${name}" value="${idx}" ${checked}/>
         <span>${opt.label}</span>
       </label>`;
-    if(isOther){
-      html += `<div class="option other-input" data-for="${idx}" style="display:${state.answers[current]===idx?'block':'none'}">
+    if (isOther) {
+      html += `<div class="option other-input" data-for="${idx}" style="display:${state.answers[current] === idx ? 'block' : 'none'}">
         <input type="text" placeholder="Please specify" value="${otherVal}"/>
       </div>`;
     }
@@ -157,15 +168,15 @@ function renderQuestion(){
       const idx = Number(e.target.value);
       state.answers[current] = idx;
       nextBtn.disabled = false;
-      document.querySelectorAll(".other-input").forEach(div=>{
-        if(Number(div.getAttribute("data-for"))===idx){ div.style.display="block"; }
-        else{ div.style.display="none"; }
+      document.querySelectorAll(".other-input").forEach(div => {
+        if (Number(div.getAttribute("data-for")) === idx) { div.style.display = "block"; }
+        else { div.style.display = "none"; }
       });
     });
   });
 
-  document.querySelectorAll(".other-input input").forEach(inp=>{
-    inp.addEventListener("input", e=>{ state.otherTexts[current] = e.target.value; });
+  document.querySelectorAll(".other-input input").forEach(inp => {
+    inp.addEventListener("input", e => { state.otherTexts[current] = e.target.value; });
   });
 
   prevBtn.disabled = current === 0;
@@ -173,10 +184,10 @@ function renderQuestion(){
   nextBtn.disabled = state.answers[current] === null;
 }
 
-prevBtn.addEventListener("click", () => { if(current>0){ current--; renderQuestion(); } });
+prevBtn.addEventListener("click", () => { if (current > 0) { current--; renderQuestion(); } });
 nextBtn.addEventListener("click", () => {
-  if(state.answers[current]===null) return;
-  if(current < QUIZ.questions.length - 1){ current++; renderQuestion(); }
+  if (state.answers[current] === null) return;
+  if (current < QUIZ.questions.length - 1) { current++; renderQuestion(); }
   else {
     progressBar.style.width = "100%";
     stepLabel.textContent = "Completed";
@@ -184,7 +195,7 @@ nextBtn.addEventListener("click", () => {
   }
 });
 
-restartBtn.addEventListener("click", (e)=>{
+restartBtn.addEventListener("click", (e) => {
   e.preventDefault();
   current = 0;
   state.answers = Array(QUIZ.questions.length).fill(null);
@@ -193,15 +204,15 @@ restartBtn.addEventListener("click", (e)=>{
   enterQuiz();
 });
 
-leadForm.addEventListener("submit", async (e)=>{
+leadForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  
+
   // 收集表單資料
   const formData = new FormData(leadForm);
   const score = calcScore();
   const band = pickBand(score);
   const finalScore = toHighScore(score);
-  
+
   // 準備傳送到 Google Sheets 的資料
   const sheetData = {
     name: formData.get('name'),
@@ -224,16 +235,16 @@ leadForm.addEventListener("submit", async (e)=>{
     final_score: finalScore,
     result_band: band.text
   };
-  
+
   // Google Apps Script Web App URL
   const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw7zE7Ef3qIBIeI62e0_RWmVJu3VMqF4hIx0yaAFeLhiO7D0PlG-R7jEOvJHvp2Bc7hNQ/exec';
-  
+
   // 傳送資料到 Google Sheets
   try {
     if (GOOGLE_SHEET_URL && GOOGLE_SHEET_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
       console.log('正在傳送資料到 Google Sheets...');
       console.log('資料內容:', sheetData);
-      
+
       const response = await fetch(GOOGLE_SHEET_URL, {
         method: 'POST',
         mode: 'no-cors', // 注意：使用 no-cors 模式時無法讀取回應內容
@@ -242,7 +253,7 @@ leadForm.addEventListener("submit", async (e)=>{
         },
         body: JSON.stringify(sheetData)
       });
-      
+
       // 因為使用 no-cors，無法讀取回應狀態
       // 302 重定向是 Google Apps Script 的正常行為
       console.log('資料已送出到 Google Sheets');
@@ -255,32 +266,32 @@ leadForm.addEventListener("submit", async (e)=>{
     console.error('傳送資料時發生錯誤:', error);
     // 即使傳送失敗，仍然顯示結果給使用者
   }
-  
+
   // 顯示結果
   resultText.textContent = `Your score: ${finalScore}/100. ${band.text}`;
   showResult();
 });
 
-function calcScore(){
-  return state.answers.reduce((sum, idx, i)=>{
+function calcScore() {
+  return state.answers.reduce((sum, idx, i) => {
     const q = QUIZ.questions[i];
     const sc = q.options[idx]?.score || 0;
     return sum + sc;
   }, 0);
 }
-function maxRawScore(){
-  return QUIZ.questions.reduce((sum, q)=>{
+function maxRawScore() {
+  return QUIZ.questions.reduce((sum, q) => {
     const m = Math.max(...q.options.map(o => o.score || 0));
     return sum + m;
   }, 0);
 }
-function toHighScore(raw){
+function toHighScore(raw) {
   const max = maxRawScore();
   const scaled = Math.round(90 + (raw / max) * 10);
   return Math.min(100, Math.max(90, scaled));
 }
-function pickBand(score){
-  return OUTCOMES.find(o=> score >= o.min && score <= o.max) || OUTCOMES.at(-1);
+function pickBand(score) {
+  return OUTCOMES.find(o => score >= o.min && score <= o.max) || OUTCOMES.at(-1);
 }
 
 renderQuestion();

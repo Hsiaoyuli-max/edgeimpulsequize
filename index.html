@@ -7,6 +7,7 @@
   <meta name="description" content="Answer 8 quick questions to get a score and a chance to win a free expert consultation.">
   <link rel="icon" href="assets/favicon.svg">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <header class="site-header">
@@ -63,7 +64,7 @@
     <h3>Your Result</h3>
     <p id="resultText" class="result-text"></p>
     <div class="result-cta" id="cta">
-      <a href="#" class="btn btn-primary">Free consultation with an expert</a>
+      <a id="consultationBtn" href="#" class="btn btn-primary">Free consultation with an expert</a>
       <a id="restartBtn" href="#" class="btn btn-ghost">Restart Quiz</a>
     </div>
   </section>
